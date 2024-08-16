@@ -1,0 +1,904 @@
+openapi: 3.0.0
+info:
+  title: Swagger IA Data Discovery
+  description: AI search engine for Data Discovery
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/v1
+paths:
+  /login:
+    post:
+      tags:
+        - Login
+      summary: Login user
+      description: Endpoint para loguearse correctamente al al buscador.
+      requestBody:
+        description: Objeto JSON que contiene la información del usuario.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        '200':
+          description: Login success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad Request 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '401':
+          description: Credenciales inválidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        
+        '500':
+          description: Internal Server Error
+
+
+  /user:
+    get:
+      tags:
+        - Users
+      summary: All users
+      description: Return map from all users
+      responses:
+        '200':
+          description: List all users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserData'
+        '500':
+          description: Internal Server Error
+
+    post:
+      tags:
+        - Users
+      summary: Add a new user
+      description: Generate a new user 
+      requestBody:
+        description: JSON to add a new user
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserData_Backend'
+      responses:
+        '200':
+          description: new user creat success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+
+        '500':
+          description: Internal Server Error
+      
+  /user/{id}:
+    get:
+      tags:
+        - Users
+      summary: Find user by ID
+      description: Return a single user
+      parameters:
+        - name: userID
+          in: path
+          description: ID of user to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Single user data
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/UserData'
+
+        '404':
+          description: Not found User
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Message'
+        '500':
+          description: Internal Server Error
+
+    put:
+      tags:
+        - Users
+      summary: Update user by ID
+      description: Update a data single user
+      parameters:
+        - name: userID
+          in: path
+          description: ID of user to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: JSON to update data user
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/UserData_Backend'
+      responses:
+        '200':
+          description: User add success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+                description: Update user success
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+                description: Bad Request 
+        '404':
+          description: Not Found user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+                description: Not found user id
+        '500':
+          description: Internal Server Error
+
+  /indexers:
+    get:
+      tags:
+        - Indexers
+      summary: All indexers
+      description: Return map from all indexers
+      responses:
+        '200':
+          description: List all users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Indexers'
+        '500':
+          description: Internal Server Error
+
+    post:
+      tags:
+        - Indexers
+      summary: Add a new indexers
+      description: Create a new indexers
+      requestBody:
+        description: JSON to creat a new indexers
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Indexers_Backend'
+      responses:
+        '200':
+          description: Indexers add success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '500':
+          description: Internal Server Error
+
+  /indexers/{id}:
+    get:
+      tags:
+        - Indexers
+      summary: Find a indexers by ID
+      description: Return a single indexers
+      parameters:
+        - name: IndexersID
+          in: path
+          description: ID of indexers to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Single user data
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Indexers_getID'
+
+        '404':
+          description: Not found User
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Message'
+        '500':
+          description: Internal Server Error
+
+    put:
+      tags:
+        - Indexers
+      summary: Update a indexers by ID
+      description: Update a single indexers
+      parameters:
+        - name: IndexersID
+          in: path
+          description: ID of indexers to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: JSON to update a indexers
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Indexers_Backend'
+      responses:
+        '200':
+          description: Update success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '404':
+          description: Not Found Indexers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+                description: Not found indexers id
+        '500':
+          description: Internal Server Error
+
+        
+  /areas:
+    get:
+      tags:
+        - Areas 
+      summary: All Areas
+      description: Return a map to all Areas
+      responses:
+        '200':
+          description: List all Areas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Area'
+        '500':
+          description: Internal Server Error
+  
+  /areas/{id}:
+    get:
+      tags:
+        - Areas 
+      summary: Find Area by ID
+      description: Return a single Area
+      parameters:
+        - name: AreaID
+          in: path
+          description: ID of Area to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Single Area data
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Area'
+
+        '404':
+          description: Not found Area  
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Message'
+        '500':
+          description: Internal Server Error
+
+  /destinations:
+    get: 
+      tags:
+        - Destinations 
+      summary: All destinations
+      description: Return a map to all Destinations
+      responses:
+        '200':
+          description: Single user data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Destinations'
+        '500':
+          description: Internal Server Error
+
+    post:
+      tags:
+        - Destinations 
+      summary: Add a new Destinations
+      description: Return a map to all Destinations
+      requestBody:
+        description: JSON to creat a new indexers
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/destinations_backend'
+      responses:
+        '200':
+            description: new user creat success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Message'
+        '400':
+            description: Bad Request
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error400'
+        '500':
+            description: Internal Server Error
+
+  /destinations/{id}:
+    get:
+      tags:
+        - Destinations
+      summary: Find destinations by ID
+      description: Return a single Destination
+      parameters:
+        - name: DestinationID
+          in: path
+          description: ID of Destination to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Single destination data
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/destinatins_response_get_id'
+        '404':
+          description: Not found Destination Id
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Message'
+        '500':
+          description: Internal Server Error
+    
+    put:
+      tags:
+        - Destinations
+      summary: Update a destination by ID
+      description: Update a single destination
+      parameters:
+        - name: DestinationID
+          in: path
+          description: ID of destination to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: JSON to update a destination
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/destinations_backend'
+      responses:
+        '200':
+          description: Update success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '404':
+          description: Not Found destination Id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '500':
+          description: Internal Server Error
+  
+  /connection-type:
+    get: 
+      tags:
+        - "Connection type"
+      summary: All connections type
+      description: Return a map to all connections type
+      responses:
+        '200':
+          description: Single user data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/connections_type'
+        '500':
+          description: Internal Server Error
+
+  /roles:
+    get: 
+      tags:
+        - "Roles"
+      summary: All Roles
+      description: Return all Roles
+      responses:
+        '200':
+          description: Single user data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Roles'
+        '500':
+          description: Internal Server Error
+
+
+  /search/{ididexador}:
+    get: 
+      tags:
+        - "Search"
+      summary: "View for a search"
+      parameters:
+        - in: header
+          name: plainText
+          schema:
+            type: string
+          required: true
+
+        - in: header
+          name: recognitionType
+          schema:
+            type: string
+            example: PDF
+          required: true
+
+        - in: header
+          name: expand
+          schema:
+            type: boolean
+            example: true
+          required: true
+
+        - in: header
+          name: pageNumber
+          schema:
+            type: integer
+            example: 1
+          required: false
+      responses:
+        '200':
+          description: Found data for the search
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/search_200'
+
+          
+
+          
+
+        
+
+
+
+
+
+
+      
+          
+###############################################################################################################################################################33
+  
+
+
+  
+
+
+
+
+
+components:
+  schemas:
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Correo electrónico del usuario
+        password:
+          type: string
+          description: Contraseña del usuario
+      required:
+        - email
+        - password
+
+
+    User:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: Access token valid
+        refresh_token:
+          type: string
+          description: Refresh token 
+        user_data:
+          $ref:  '#/components/schemas/UserData'
+          description: Datos del usuario
+        message: 
+          type: string
+          description: message 
+
+  
+        
+    
+    UserData:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID unico de user
+        Nombre:
+          type: string
+          description: First name user
+        Apellido:
+          type: string
+          description: Last name user
+        Mail:
+          type: string
+          description: Email user
+        Habilitado:
+          type: integer
+          description: User have permitions
+        Roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rol_String'
+            description: Roles del usuario
+
+    UserData_Backend:
+      type: object
+      properties:
+        Nombre:
+          type: string
+          description: First name user
+        Apellido:
+          type: string
+          description: Last name user
+        Mail:
+          type: string
+          description: Email user
+        Password: 
+          type: string
+          description: password user
+        Habilitado:
+          type: integer
+          description: User have permitions
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rol'
+            description: Roles del usuario
+
+    Indexers:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID Indexers
+        Description:
+          type: string
+          description: Description indexers
+        AnalizarEntidades:  
+          type: string
+        Habilitado:
+          type: string
+        NombreTipoConectorDatos: 
+          type: string
+        Area:
+          type: array
+          items:
+            $ref: '#/components/schemas/Area'
+        Origen:
+          type: array
+          items:
+            $ref: '#/components/schemas/Origen'
+        Destino:
+          type: array
+          items:
+            $ref: '#/components/schemas/Destino'
+
+    Indexers_Backend:
+      type: object
+      properties:
+        Description:
+          type: string
+          description: Description indexers
+        IdDatosOrigenes:  
+          type: integer
+        IdDatosDestinos: 
+          type: integer
+        IdAreas: 
+          type: integer
+        AnalizarEntidades: 
+          type: integer
+        Habilitado:
+          type: integer
+    
+    Indexers_getID:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID Indexers
+        Description:
+          type: string
+          description: Description indexers
+        IdDatosOrigenes:  
+          type: integer
+        IdDatosDestinos: 
+          type: integer
+        IdAreas: 
+          type: integer
+        AnalizarEntidades: 
+          type: boolean
+        Habilitado:
+          type: boolean
+
+
+    Area: 
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Id to area rol
+        nombre: 
+          type: string
+          description: Name area
+      
+    Origen: 
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Id to origen 
+        descripcion: 
+          type: string
+          description: description to single origen
+
+    Destino: 
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Id destino 
+        descripcion: 
+          type: string
+          description: description to single destino
+
+
+
+
+    Rol:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID del rol
+
+    Rol_String:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID del rol
+        nombreRol: 
+          type: string
+          description: Nombre del rol
+
+
+    Message:
+      type: object
+      properties:
+        message: 
+          type: string
+          description: message content
+
+    Error400:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: tipo de error 
+              msg:
+                type: string
+                description: message error description
+              path:
+                type: string
+                description: path error
+              location:
+                type: string
+                description: error location 
+
+
+    Destinations: 
+      type: object
+      properties:
+        Id:
+          type: integer
+          description: Id from destinations
+        Descripcion: 
+          type: string
+          description: descripcion of a single destinations
+        BlobCNN: 
+          type: string
+        BlobContainer:
+          type: string
+          description: container to get destinations
+        BlobFolder: 
+          type: string
+          description: folder to save destinations
+        Nombre:
+          type: string
+
+    destinations_backend:
+      type: object
+      properties:
+        IdTipoConectorDatos:
+          type: integer
+          description: Id to select type conector
+        Descripcion: 
+          type: string
+          description: descripcion of a single destinations
+        BlobCNN: 
+          type: string
+        BlobContainer:
+          type: string
+          description: container to get destinations
+        BlobFolder: 
+          type: string
+          description: folder to save destinations
+
+    destinatins_response_get_id:
+      type: object
+      properties:
+        Id:
+          type: integer
+          description: Id from destinations
+        IdTipoConectorDatos:
+          type: integer
+          description: Id to select type conector
+        Descripcion: 
+          type: string
+          description: descripcion of a single destinations
+        BlobCNN: 
+          type: string
+        BlobContainer:
+          type: string
+          description: container to get destinations
+        BlobFolder: 
+          type: string
+          description: folder to save destinations
+
+
+    connections_type:
+      type: object
+      properties:
+        Id: 
+          type: integer
+          description: Id to connections type
+        Nombre: 
+          type: string
+          description: Name for connections type
+
+
+    Roles: 
+      type: object
+      properties:
+        Id: 
+          type: integer
+          description: Id to Rol
+        Nombre: 
+          type: string
+          description: Name for Rol
+
+    search_200:
+      type: object
+      properties:
+        resultados: 
+          type: array
+          items:
+            type: object
+            properties:
+              id: 
+                type: string
+                
+
+
+
+
+
+
+
+
+
+
+        
+
+        
